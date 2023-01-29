@@ -1,0 +1,23 @@
+.weather {
+    background: white;
+    grid-column: 2/3;
+    width: 100%;
+  
+    display: grid;
+    grid-row-gap: 50px;
+  }
+.Container{
+    position: relative;
+    display: grid;
+    grid-template-columns: 10rem auto;
+    gap: 0.1rem;
+    background: #f3f3f3;
+}
+
+@media (max-width: 400px) {
+
+ .Container{
+  grid-template-columns: 6rem auto;
+ }
+  
+}

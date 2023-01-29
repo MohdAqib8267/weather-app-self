@@ -1,0 +1,15 @@
+.RightContainer{
+display: flex;
+
+flex-direction: column;
+justify-content: center;
+align-items: center;
+width: 100%;
+overflow: hidden;
+gap: 5px;
+}
+@media (max-width:400px){
+    .blur{
+        display: none;
+    }
+}
