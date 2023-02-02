@@ -7,7 +7,10 @@ const app=express();
 import axios from 'axios'
 import Weather from './Model/WeatherInfo.js'
 import cities from './city.js'
-import path from 'path';
+
+
+// import path from 'path';
+// import url from 'url'
 app.use(cors());
 
 
@@ -17,18 +20,22 @@ dotenv.config();
 app.use(bodyParser.json({limit:'30mb',extended:true}));
 app.use(bodyParser.urlencoded({limit:'30mb',extended:true}));
 
-//static files
-app.use(express.static(path.join(__dirname,'../client/build')))
+// static files
 
-app.get('*',function(req,res){
-  res.sendFile(path.join(__dirname,"../client/build/index.html"));
-})
+// const __filename = url.fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+// app.use(express.static(path.join(__dirname,'./client/build')));
+
+// app.get('*', async function(req,res){
+//   res.sendFile(path.join(__dirname,"./client/build/index.html"))
+// })
 
 //connection with mongoose
-mongoose
+mongoose.set('strictQuery', false);
+mongoose  
   .connect(process.env.MONGO_DB, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true, 
   })
   .then(() =>
     app.listen(process.env.PORT, () =>
@@ -43,7 +50,7 @@ app.get('/weather',async(req,res)=>{
     let data = await Weather.find();
     res.status(200).json(data);
    } catch (error) {
-    res.status(500).json("error fetching")
+    res.status(500).json("error fetching") 
    }
     
 })
@@ -51,7 +58,6 @@ app.get('/weather',async(req,res)=>{
 async function getWeather(city){
     const apiKey = '59c6e52faba2ddb625854d2d3e8924b3';
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
-
 
     try {
         const response = await axios.get(url);
@@ -63,7 +69,7 @@ async function getWeather(city){
             temperature: (Math.floor(data.main.temp)-273),
             humidity: data.main.humidity,
             windSpeed: data.wind.speed,
-            clouds:data.clouds.all,
+            clouds:data.clouds.all,  
             coord:data.coord
         })
         
@@ -82,7 +88,9 @@ async function getWeather(city){
 }
 
 
-const thirtyCities = cities.slice(0, 30);
+const thirtyCities = cities.slice(0, 30)
+thirtyCities.reverse();
+
 const cityPromises = thirtyCities.map(city => getWeather(city));
 Promise.all(cityPromises)
   .then(() => console.log("All data saved to the database"))

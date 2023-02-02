@@ -1,53 +1,50 @@
-import React from 'react'
-import {MapContainer,TileLayer,Marker,Popup} from 'react-leaflet'
-import 'leaflet/dist/leaflet.css';
- import Header from '../Header/Header';
-import { Icon } from "leaflet";
+import React, { useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "./Location.css";
+import "leaflet/dist/leaflet.css";
+import osm from "./osm-providers";
+import Header from "../Header/Header";
 
-
-
-
-export const icon = new Icon({
-  iconUrl: "/skateboarding.svg",
-  iconSize: [25, 25]
+const markerIcon = new L.Icon({
+  iconUrl: require("../../Data/marker.png"),
+  iconSize: [40, 40],
+  iconAnchor: [17, 46], //[left/right, top/bottom]
+  popupAnchor: [0, -46], //[left/right, top/bottom]
 });
 
 const Location = (props) => {
   //  console.log(props.sendData[0].coord.lat);
-  const first = props.sendData.slice(0,30);
+  const thirtyCities = props.sendData.slice(0, 30);
+  // console.log(thirtyCities);
   //console.log(first);
   //console.log(first[0].coord.lat,first[0].coord.lon);
 
+  const [center, setCenter] = useState({ lat:  28.644800, lng: 77.216721 });
+  const zoom = 10;
 
-  const position = [27.5, 77.6833]
   return (
-    <div className='Location'>
-      <Header/>
-      {/* <span style={{display:'flex',justifyContent:'center',gap:'2px',fontWeight:'bold'}}>New Delhi</span>  */}
-      <MapContainer center={position} zoom={13} scrollWheelZoom={false} style={{width:'100%',height:'90vh'}}>
-          <TileLayer 
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-        
-        {
-          first.map((item,ind)=>{
-            <Marker position={[item.coord.lat,item.coord.lon]} key={ind} icon={icon} >
-                <Popup style={{display:'flex',flexDirection:'column', gap:'0.2rem'}}>
-                 {item.city}
-                 <br />
-                 {item.temperature} C
-               </Popup> 
-            
-            </Marker>
-             
-          })
-        }
+    <div className="Location">
+      <Header />
+
+      <MapContainer center={center} zoom={zoom}>
+        <TileLayer
+          url={osm.maptiler.url}
+          attribution={osm.maptiler.attribution}
+        />
        
+
+        {thirtyCities.map((city, idx) => (
+          <Marker position={[city.coord.lat, city.coord.lon]} icon={markerIcon} key={idx}>
+            <Popup>
+              {city.city}
+              <br />
+              {city.temperature} C
+            </Popup>
+          </Marker>
+        ))}
       </MapContainer>
     </div>
-  )
-}
- export default Location
-
-
+  );
+};
+export default Location;

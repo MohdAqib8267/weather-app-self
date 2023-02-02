@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import Header from '../Header/Header'
+
 import Location from '../Location/Location'
 
 import RightContainer from '../RightContainer/RightContainer'
 import Sidebar from '../Sidebar/Sidebar'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import WeatherForm from '../WeatherForm/WeatherForm'
+
 import './Container.css'
 
 const Container = () => {
@@ -22,7 +22,8 @@ const getData=async()=>{
     const responce =await fetch("http://localhost:5000/weather");
     const data = await responce.json();
     //  console.log(data[0]);
-    setsendData(data);
+    const thirty=data.splice(Math.max(data.length - 30, 0));
+    setsendData(thirty);
     
 }
   return (

@@ -29,15 +29,20 @@ const WeatherForm = () => {
     handleResize();
   },[])
 
-  useEffect(()=>{
+  useEffect(() => {
     getData();
-},[]);
+    // const intervalId = setInterval(getData, 5 * 60 * 1000);
+    // return () => clearInterval(intervalId);
+    
+  }, []);
 
 const getData=async()=>{
     const responce =await fetch("http://localhost:5000/weather");
     const data = await responce.json();
-    //  console.log(data[0]);
-    setweatherData(data);
+    //  console.log(data);   
+    const thirty=data.splice(Math.max(data.length - 30, 0)); 
+    
+    setweatherData(thirty);
     
 }
 
